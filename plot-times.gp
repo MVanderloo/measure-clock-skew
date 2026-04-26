@@ -1,11 +1,11 @@
 #!/usr/bin/env gnuplot
 
 set terminal png size 800,400
-set output 'times.png'
-
-set title "Wall-Clock Time Measured Every Millisecond"
-set xlabel "Time (milliseconds)"
-set ylabel "Realtime Measurement (microseconds)"
+set output ARG1.'.png'
+set title "Measured Wall-Clock Time"
+set xlabel "Time (µs)"
+set ylabel "Wall-Clock Offset (µs)"
 set style data points
+set pointsize 0.1
 
-plot 'times.txt' using 0:1 notitle
+plot ARG1.'.txt' using ($0):1 notitle pt 7
