@@ -13,9 +13,9 @@ pub fn main(init: std.process.Init) !void {
     // clock stuff
     const clock = std.Io.Clock.real;
     const monotonic_clock = std.Io.Clock.boot;
-    const start_time = clock.now(io).toMicroseconds();
+    const offset = clock.now(io).toMicroseconds();
 
-    std.log.info("Starting measurement at {d}", .{start_time});
+    std.log.info("Starting measurement at {d}", .{offset});
 
     var queue_buffer: [1000000]i64 = undefined;
     var times: std.Io.Queue(i64) = .init(&queue_buffer);
@@ -25,7 +25,8 @@ pub fn main(init: std.process.Init) !void {
 
     while (true) {
         const wall_time = clock.now(io).toMicroseconds();
-        try times.putOne(io, wall_time - start_time);
+        const monotonic_time = monotonic_clock.now(io).toMicroseconds();
+        try times.putOne(io, wall_time - monotonic_time - offset);
         try std.Io.sleep(io, std.Io.Duration.fromMicroseconds(1000), monotonic_clock);
     }
 }
